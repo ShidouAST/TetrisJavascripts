@@ -81,17 +81,21 @@ document.addEventListener("keydown", event => {
         case "ArrowUp":
             piece.rotate(board);
             break;
-        case " ":
-            while(piece.move({x: 0, y: 1}, board)) {}
+        case " ":  // SPACEBAR → Hard Drop
+            event.preventDefault();
+            while (piece.move({x: 0, y: 1}, board)) {}
+            // Lock the piece
             board.freeze(piece);
 
+            // Clear lines & update score
             let cleared = board.clearLines();
-            if(cleared > 0) {
+            if (cleared > 0) {
                 score += this.getLineScore(cleared);
                 lines += cleared;
                 updateScore();
             }
 
+            // Spawn new piece
             piece = new Piece(ctx);
             break;
     }
@@ -100,6 +104,7 @@ document.addEventListener("keydown", event => {
     board.draw();
     piece.draw();
 });
+
 
 function getLineClearPoints(cleared, level) {
     const points = [0, 40, 100, 300, 1200]; // Tetris guideline
